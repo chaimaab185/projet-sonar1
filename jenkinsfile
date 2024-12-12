@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         SONARQUBE = 'sonarQube'  // Nom du serveur SonarQube configuré dans Jenkins (à adapter)
-        SONAR_TOKEN = credentials('sonar-token')  // Nom du secret contenant votre token d'authentification SonarQube dans Jenkins (à adapter)
+        SONAR_TOKEN = credentials('sonarQube')  // Nom du secret contenant votre token d'authentification SonarQube dans Jenkins (à adapter)
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // Exemple pour une build Java avec Maven (à adapter à votre technologie)
-                    sh 'mvn clean install'  // Remplacez par la commande build de votre projet
+                    sh 'npm install'  // Remplacez par la commande build de votre projet
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // Exécution de l'analyse SonarQube avec SonarScanner
-                    withSonarQubeEnv(SONARQUBE) {
+                    withSonarQubeEnv(sonarQube) {
                         sh """
                         sonar-scanner \
                             -Dsonar.projectKey=my_project_key \
@@ -35,7 +35,7 @@ pipeline {
                             -Dsonar.projectVersion=1.0 \
                             -Dsonar.sources=src \
                             -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=${env.SONAR_TOKEN}
+                            -Dsonar.login=${env.sonarQube}
                         """
                     }
                 }
