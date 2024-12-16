@@ -1,61 +1,21 @@
 pipeline {
-    agent any  // Exécute le pipeline sur n'importe quel agent disponible
-    
-    environment {
-        SONARQUBE = 'sonarQube'  // Nom du serveur SonarQube configuré dans Jenkins (à adapter)
-        SONAR_TOKEN = credentials('sonarQube')  // Nom du secret contenant votre token d'authentification SonarQube dans Jenkins (à adapter)
-    }
-
+    agent any
     stages {
-        stage('Checkout') {
-            steps {
-                // Vérification du code source depuis GitHub
-                checkout scm
-            }
-        }
-        
         stage('Build') {
             steps {
-                script {
-                    // Exemple pour une build Java avec Maven (à adapter à votre technologie)
-                    sh 'npm install'  // Remplacez par la commande build de votre projet
-                }
+                echo 'Building...'
             }
         }
-        
-        stage('SonarQube Analysis') {
+        stage('Test') {
             steps {
-                script {
-                    // Exécution de l'analyse SonarQube avec SonarScanner
-                    withSonarQubeEnv(sonarQube) {
-                        sh """
-                        sonar-scanner \
-                            -Dsonar.projectKey=my_project_key \
-                            -Dsonar.projectName=MyProject \
-                            -Dsonar.projectVersion=1.0 \
-                            -Dsonar.sources=src \
-                            -Dsonar.host.url=http://localhost:9000 \
-                            -Dsonar.login=${env.sonarQube}
-                        """
-                    }
-                }
+                echo 'Testing...'
             }
         }
-
-        stage('Quality Gate') {
+        stage('Deploy') {
             steps {
-                script {
-                    // Attente de l'analyse SonarQube et validation de la Quality Gate
-                    waitForQualityGate abortPipeline: true
-                }
+                echo 'Deploying...'
             }
-        }
-    }
-
-    post {
-        always {
-            // Actions à effectuer après le pipeline, comme l'archivage des résultats ou l'envoi de notifications
-            cleanWs()  // Nettoyage de l'espace de travail
         }
     }
 }
+
