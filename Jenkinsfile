@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         SONAR_HOST_URL = 'http://127.0.0.1:9000'
-        SONAR_TOKEN = credentials('sonar')  // Utilisation des Jenkins Credentials pour le token SonarQube
     }
     stages {
         stage('Checkout') {
@@ -14,26 +13,28 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                
+                sh 'mvn clean install'  // Commande réelle de build
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Testing...'
-
+                sh 'mvn test'  // Commande de test avec Maven
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing code with SonarQube...'
-                sh """
-                    sonar-scanner \
-                        -Dsonar.host.url=${SONAR_HOST_URL} \
-                        -Dsonar.login=${SONAR_TOKEN} \
-                        -Dsonar.projectKey=pr-sonar
-                """
+                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        sonar-scanner \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.projectKey=pr-sonar
+                    """
+                }
             }
         }
 
@@ -45,3 +46,4 @@ pipeline {
         }
     }
 }
+
