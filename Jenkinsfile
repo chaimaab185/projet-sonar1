@@ -27,7 +27,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing code with SonarQube...'
-                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar', variable: 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1 ')]) {
                     sh """
                         sonar-scanner \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
