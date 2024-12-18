@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         SONARQUBE_CREDENTIALS = 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1 ' // Référence au token SonarQube stocké dans Jenkins
-        GIT_CREDENTIALS ='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'  // Référence au token GitHub stocké dans Jenkins
+        GIT_CREDENTIALS ='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'  // Référence au token GitHub stocké dans Jenkins
     }
     stages {
         stage('Clone Repository') {
