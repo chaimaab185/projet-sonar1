@@ -33,7 +33,7 @@ pipeline {
                             -Dsonar.host.url=${SONAR_HOST_URL} \
                             -Dsonar.login=${SONAR_TOKEN} \
                             -Dsonar.projectKey=pr-sonar \
-                            -Dsonar.sources=src
+                            -Dsonar.sources=src  # Vérifiez que le dossier 'src' existe et contient des fichiers source à analyser
                     """
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
-                // Ajoutez ici votre logique de déploiement
+                // Ajoutez ici votre logique de déploiement (par exemple, vers un serveur ou un cloud)
             }
         }
     }
@@ -59,4 +59,3 @@ pipeline {
         }
     }
 }
-
