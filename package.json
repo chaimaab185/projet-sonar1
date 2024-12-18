@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "main": "fichier.js",
   "scripts": {
-    "test": "echo \"No test specified\"",
-    "build": "echo \"Build script is running...\""
+    "test": "jest",  // ou "mocha"
+    "build": "babel src -d dist",  // ou autre outil de build
+    "start": "node fichier.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {}
+  "devDependencies": {
+    "jest": "^28.0.0",  // ou "mocha": "^10.0.0"
+    "@babel/core": "^7.0.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/preset-env": "^7.0.0"
+  }
 }
