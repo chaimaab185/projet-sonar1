@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SONAR_HOST_URL = 'http://127.0.0.1:9000'
+        SONAR_HOST_URL = 'http://localhost:9000'  // URL de votre serveur SonarQube
     }
     stages {
         stage('Checkout') {
@@ -10,29 +10,30 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Building...'
-                sh 'mvn clean install'  // Commande réelle de build
+                echo 'Installing dependencies...'
+                sh 'npm install'  // Installer les dépendances du projet
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing...'
-                sh 'mvn test'  // Commande de test avec Maven
+                echo 'Running tests...'
+                sh 'npm test'  // Exécuter les tests (si vous avez un script de test configuré)
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 echo 'Analyzing code with SonarQube...'
-                withCredentials([string(credentialsId: 'sonar', variable: 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1 ')]) {
+                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
                     sh """
                         sonar-scanner \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
                             -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.projectKey=pr-sonar
+                            -Dsonar.projectKey=pr-sonar \
+                            -Dsonar.sources=src
                     """
                 }
             }
@@ -41,8 +42,20 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
-                // Ajoutez ici la commande de déploiement réelle
+                // Ajoutez ici votre logique de déploiement
             }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline finished successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
