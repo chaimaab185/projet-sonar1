@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        SONARQUBE_CREDENTIALS = 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1 ' // Référence au token SonarQube stocké dans Jenkins
+        SONARQUBE_CREDENTIALS = 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1'  // Référence au token SonarQube stocké dans Jenkins
         GIT_CREDENTIALS ='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'  // Référence au token GitHub stocké dans Jenkins
     }
     stages {
@@ -50,8 +50,8 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Deploying application to the local directory...'
-                bat 'if not exist C:\\Users\\userr\\projet-sonar1 mkdir C:\\Users\\userr\\projet-sonar1'
-                bat 'xcopy /E /I . C:\\Users\\userr\\projet-sonar1\\'
+                bat 'if not exist "C:\\Users\\userr\\projet-sonar1" mkdir "C:\\Users\\userr\\projet-sonar1"'
+                bat 'xcopy /E /I . "C:\\Users\\userr\\projet-sonar1\\"'
             }
         }
         stage('Run Application') {
