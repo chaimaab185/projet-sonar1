@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    environment {
-        SONAR_HOST_URL = 'http://localhost:9000'  // URL de votre serveur SonarQube
-    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -20,35 +18,18 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'npm test'  // Exécuter les tests (si vous avez un script de test configuré)
+                sh 'npm test'  // Exécuter les tests (assurez-vous d'avoir un script de test configuré dans package.json)
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Analyzing code with SonarQube...'
-                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        sonar-scanner \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.projectKey=pr-sonar \
-                            -Dsonar.sources=src  # Vérifiez que le dossier 'src' existe et contient des fichiers source à analyser
-                            -Dsonar.language=js
 
-                    """
-                }
-            }
-        
-        }
-
-        stage('Deploy') {
+        stage('Build') {
             steps {
-                echo 'Deploying...'
-                // Ajoutez ici votre logique de déploiement (par exemple, vers un serveur ou un cloud)
+                echo 'Building the project...'
+                sh 'npm run build'  // Exécuter la commande de build si elle est définie dans votre package.json
             }
         }
     }
-    
+
     post {
         always {
             echo 'Pipeline completed.'
