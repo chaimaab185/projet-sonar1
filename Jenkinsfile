@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GIT_CREDENTIALS = credentials('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')  // Référence au credential GitHub que vous avez créé
+        GIT_CREDENTIALS = credentials('chaimaa185')  // Référence au credential GitHub que vous avez créé
         SONARQUBE_CREDENTIALS = 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1' // Token SonarQube
     }
     stages {
