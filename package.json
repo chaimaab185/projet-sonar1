@@ -1,5 +1,5 @@
 {
-  "name": "projet-sonar1",  // Nom de votre projet sur GitHub
+  "name": "projet-sonar1",
   "version": "1.0.0",
   "main": "fichier.js",
   "scripts": {
@@ -10,6 +10,3 @@
   "description": "",
   "devDependencies": {}
 }
-
-
-
