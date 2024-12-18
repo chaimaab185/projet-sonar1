@@ -27,9 +27,9 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarQube') {
+                withSonarQubeEnv('sonarQube') {  // Utilisation du nom exact configuré dans Jenkins
                     script {
-                        def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        def scannerHome = tool name: 'sonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation' // Utilisation de 'sonarQube' ici
                         bat """
                             "${scannerHome}\\bin\\sonar-scanner.bat" ^
                             -Dsonar.projectKey=pr-sonar ^
