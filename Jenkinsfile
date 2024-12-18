@@ -23,7 +23,21 @@ pipeline {
                 sh 'npm test'  // Exécuter les tests (si vous avez un script de test configuré)
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Analyzing code with SonarQube...'
+                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        sonar-scanner \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.projectKey=pr-sonar \
+                            -Dsonar.sources=src  # Vérifiez que le dossier 'src' existe et contient des fichiers source à analyser
+                            -Dsonar.language=js
 
+                    """
+                }
+            }
         
         }
 
