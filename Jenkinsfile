@@ -1,63 +1,73 @@
 pipeline {
     agent any
     environment {
-        SONAR_HOST_URL = 'http://localhost:9000'  // URL de votre serveur SonarQube
+        SONARQUBE_CREDENTIALS = 'sqp_349b6232f57760fdb531fb44a00d2d047540e3a1' // Token SonarQube
     }
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm  // Récupérer le code source du repository
+                echo 'Cloning repository from GitHub...'
+                git branch: 'main', 
+                    // Remplacer par vos credentials GitHub
+                    url: 'https://github.com/chaimaab185/projet-sonar1.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'npm install'  // Installer les dépendances du projet
+                bat 'npm install'
             }
         }
-
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                sh 'npm test'  // Exécuter les tests (si vous avez un script de test configuré)
+                echo 'Running tests and generating coverage...'
+                bat 'npm test'
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                echo 'Analyzing code with SonarQube...'
-                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        sonar-scanner \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.projectKey=pr-sonar \
-                            -Dsonar.sources=src  # Vérifiez que le dossier 'src' existe et contient des fichiers source à analyser
-                            -Dsonar.language=js
-
-                    """
+                withSonarQubeEnv('SonarQube') {
+                    script {
+                        def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                        bat """
+                            "${scannerHome}\\bin\\sonar-scanner.bat" ^ 
+                            -Dsonar.projectKey=pr-sonar ^ 
+                            -Dsonar.host.url=http://127.0.0.1:9000 ^ 
+                            -Dsonar.login=${SONARQUBE_CREDENTIALS} ^ 
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^ 
+                        """
+                    }
                 }
             }
-        
         }
-
-        stage('Deploy') {
+        stage('Build Application') {
             steps {
-                echo 'Deploying...'
-                // Ajoutez ici votre logique de déploiement (par exemple, vers un serveur ou un cloud)
+                echo 'Building the application...'
+                bat 'npm run build'
+            }
+        }
+        stage('Deploy Application') {
+            steps {
+                echo 'Deploying application to the local directory...'
+                bat 'if not exist C:\\Users\\userr\\projet-sonar1 mkdir C:\\Users\\userr\\projet-sonar1'
+                bat 'xcopy /E /I . C:\\Users\\userr\\projet-sonar1\\'
+            }
+        }
+        stage('Run Application') {
+            steps {
+                echo 'Running the application...'
+                script {
+                    bat 'start /B node C:\\Users\\userr\\projet-sonar1\\src\\fichier.js'
+                }
             }
         }
     }
-    
     post {
         always {
-            echo 'Pipeline completed.'
-        }
-        success {
-            echo 'Pipeline finished successfully.'
+            echo 'Pipeline completed!'
         }
         failure {
-            echo 'Pipeline failed.'
+            echo 'Pipeline failed. Please check the logs for more details.'
         }
     }
 }
