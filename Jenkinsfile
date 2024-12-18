@@ -34,6 +34,8 @@ pipeline {
                             -Dsonar.login=${SONAR_TOKEN} \
                             -Dsonar.projectKey=pr-sonar \
                             -Dsonar.sources=src  # Vérifiez que le dossier 'src' existe et contient des fichiers source à analyser
+                            -Dsonar.language=js
+
                     """
                 }
             }
